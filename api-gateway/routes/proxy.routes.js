@@ -7,14 +7,14 @@ const router = express.Router();
 router.use('/auth', createProxyMiddleware({
   target: process.env.AUTH_SERVICE_URL,
   changeOrigin: true,
-  pathRewrite: { '^/auth': '' }
+  pathRewrite: { '^/': '' }
 }));
 
 // User service proxy
 router.use('/users', createProxyMiddleware({
   target: process.env.USER_SERVICE_URL,
   changeOrigin: true,
-  pathRewrite: { '^/users': '/api/users' }
+  pathRewrite: { '^/': '/api/users' }
 }));
 
 module.exports = router;
