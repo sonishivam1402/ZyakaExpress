@@ -8,7 +8,7 @@ const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use('/', proxyRoutes);
+app.use('/api/v1/', proxyRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
