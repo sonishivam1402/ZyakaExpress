@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
   if (!token) return res.status(401).json({ error: 'No token provided' });
 
   try {
-    const response = await axios.post(`${process.env.AUTH_SERVICE_URL}/auth/verify`, {}, {
+    const response = await axios.post(`${process.env.AUTH_SERVICE_URL}/api/v1/auth/verify`, {}, {
       headers: { Authorization: token }
     });
 
