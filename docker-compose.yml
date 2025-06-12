@@ -19,6 +19,13 @@ services:
       DATABASE_URL: postgresql://ZyakaExpress_owner:npg_0xL5mrRpXHCW@ep-rough-boat-a8qzkm9n-pooler.eastus2.azure.neon.tech/ZyakaExpress?sslmode=require
       JWT_SECRET: efa29e47afe57f3826e834266d3224842f88ae08859e4736ea4e444e4ba0b081
 
+  restaurant-service:
+    build: ./services/restaurant-service
+    ports:
+      - "5002:5002"
+    environment:
+      MONGO_URI : "mongodb+srv://shivamsoniwebdev:shivamsoni@restaurant-service.mgihujf.mongodb.net/ZyakaExpress?retryWrites=true&w=majority&appName=Restaurant-Service"
+
   api-gateway:
     build: ./api-gateway
     ports:
@@ -26,8 +33,9 @@ services:
     environment:
       USER_SERVICE_URL: http://user-service:5000
       AUTH_SERVICE_URL: http://auth-service:5001
+      RESTAURANT_SERVICE_URL: http://restaurant-service:5002
     depends_on:
       - user-service
       - auth-service
-
+      - restaurant-service
 
