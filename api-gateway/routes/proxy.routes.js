@@ -13,18 +13,26 @@ router.use('/auth', createProxyMiddleware({
 }));
 
 // User service proxy
+router.use('/users/update/:id', verifyToken, createProxyMiddleware({   // not working 
+  target: process.env.USER_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return `/api/v1/users/update/${req.params.id}`;
+  }
+}));
+
+router.use('/users/:id', verifyToken, createProxyMiddleware({
+  target: process.env.USER_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: (path, req) => {
+    return `/api/v1/users/${req.params.id}`;
+  }
+}));
+
 router.use('/users', createProxyMiddleware({
   target: process.env.USER_SERVICE_URL,
   changeOrigin: true,
   pathRewrite: { '^/': '/api/v1/users' }
-}));
-
-router.use('/profile/:id', verifyToken, createProxyMiddleware({
-  target: process.env.USER_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: (path, req) => {
-    return `/api/v1/users/profile/${req.params.id}`;
-  }
 }));
 
 module.exports = router;
