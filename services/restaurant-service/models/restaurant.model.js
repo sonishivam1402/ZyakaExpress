@@ -49,6 +49,11 @@ const restaurantSchema = new mongoose.Schema({
         min: 0,
         max: 5
     },
+    ownerId: {
+        type: String,
+        required: [true, 'Restaurant Owner is required'],
+        trim: true
+    },
     menu: [menuItemSchema],
 });
 
