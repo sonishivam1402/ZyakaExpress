@@ -1,14 +1,18 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const proxyRoutes = require('./routes/proxy.routes');
+const userProxyRoutes = require('./routes/user.proxy.routes');
+const authProxyRoutes = require('./routes/auth.proxy.route');
+const restaurantProxyRoutes = require('./routes/restaurant.proxy.routes');
 
 dotenv.config();
 const app = express();
 
 app.use(morgan('dev'));
 app.use(express.json());
-app.use('/api/v1/', proxyRoutes);
+app.use('/api/v1/users', userProxyRoutes);
+app.use('/api/v1/auth', authProxyRoutes);
+app.use('/api/v1/restaurant', restaurantProxyRoutes);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

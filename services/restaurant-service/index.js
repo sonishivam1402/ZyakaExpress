@@ -8,7 +8,7 @@ connectDB();
 
 const app = express();
 app.use(express.json());
-app.use("/api/v1/restaurants", restaurantRoutes);
+app.use("/api/v1/restaurant", restaurantRoutes);
 
 const PORT = process.env.PORT || 5002;
 

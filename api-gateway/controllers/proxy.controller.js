@@ -40,7 +40,28 @@ const authServiceProxyHandler = async (req, res) => {
   }
 };
 
+const restaurantServiceProxyHandler = async (req, res) => {
+  const method = req.method.toLowerCase();
+  try {
+    console.log(`${process.env.RESTAURANT_SERVICE_URL}${req.originalUrl}`);
+    const response = await axios({
+      method,
+      url: `${process.env.RESTAURANT_SERVICE_URL}${req.originalUrl}`,
+      data: req.body,
+      headers: {
+        Authorization: `Bearer ${req.headers.authorization?.split(" ")[1]}`,
+      },
+    });
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to fetch the restaurant data.",
+    });
+  }
+};
+
 module.exports = {
   userServiceProxyHandler,
   authServiceProxyHandler,
+  restaurantServiceProxyHandler
 };
