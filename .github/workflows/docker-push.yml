@@ -3,7 +3,7 @@ name: Build & Push Docker Images
 on:
   push:
     branches:
-      - main  # Triggers on push to main branch
+      - main
 
 jobs:
   docker-build-and-push:
@@ -14,12 +14,19 @@ jobs:
         include:
           - name: user-service
             path: services/user-service
+            deploy_hook: RENDER_DEPLOY_HOOK_USER_SERVICE
+
           - name: auth-service
             path: services/auth-service
+            deploy_hook: RENDER_DEPLOY_HOOK_AUTH_SERVICE
+
           - name: restaurant-service
             path: services/restaurant-service
+            deploy_hook: RENDER_DEPLOY_HOOK_RESTAURANT_SERVICE
+
           - name: api-gateway
             path: api-gateway
+            deploy_hook: RENDER_DEPLOY_HOOK_API_GATEWAY
 
     steps:
       - name: Checkout code
@@ -43,4 +50,5 @@ jobs:
           tags: sonishivam1402/zyaka-express-${{ matrix.name }}:latest
 
       - name: Trigger Render Deploy for ${{ matrix.name }}
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_${{ matrix.name | upper | replace('-', '_') }} }}
+        if: matrix.deploy_hook != null
+        run: curl -X POST "${{ secrets[matrix.deploy_hook] }}"
