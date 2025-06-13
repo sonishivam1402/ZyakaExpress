@@ -41,3 +41,6 @@ jobs:
           file: ./${{ matrix.path }}/Dockerfile
           push: true
           tags: sonishivam1402/zyaka-express-${{ matrix.name }}:latest
+
+      - name: Trigger Render Deploy for ${{ matrix.name }}
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_${{ matrix.name | upper | replace('-', '_') }} }}
