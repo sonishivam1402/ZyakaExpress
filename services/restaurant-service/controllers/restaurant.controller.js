@@ -1,4 +1,5 @@
 const Restaurant = require("../models/restaurant.model");
+const MenuItem = require("../models/menuItems.model");
 
 // Get all restaurants
 exports.getAllRestaurants = async (req, res) => {
@@ -29,46 +30,53 @@ exports.updateRestaurant = async (req, res) => {
 
 // Delete restaurant
 exports.deleteRestaurant = async (req, res) => {
-  const deleted = await Restaurant.findByIdAndDelete(req.params.id);
-  if (!deleted) return res.status(404).json({ error: "Restaurant not found" });
-  res.json({ message: "Deleted successfully" });
+  try {
+    const menuItems = await MenuItem.findOne({ "restaurantId": req.params.id });
+
+    if (menuItems) {
+      return res.status(400).json({ error: "Cannot delete restaurant with existing menu items" });
+    }
+
+    const deletedRestaurant = await Restaurant.findByIdAndDelete(req.params.id);
+    if (!deletedRestaurant) return res.status(404).json({ error: "Restaurant not found" });
+
+    res.json({ message: "Restaurant deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
 };
+
 
 // Add menu item
 exports.addMenuItem = async (req, res) => {
   const restaurant = await Restaurant.findById(req.params.id);
   if (!restaurant) return res.status(404).json({ error: "Restaurant not found" });
 
-  restaurant.menu.push(req.body);
-  await restaurant.save();
-  res.status(201).json(restaurant);
+  const newMenu = new MenuItem(req.body);
+  await newMenu.save();
+  res.status(201).json(newMenu);
 };
 
 // Get all menu items
 exports.getMenuItems = async (req, res) => {
-  const restaurant = await Restaurant.findById(req.params.id);
-  if (!restaurant) return res.status(404).json({ error: "Restaurant not found" });
+  const menu = await MenuItem.find({ "restaurantId": req.params.id });
+  if (!menu) return res.status(404).json({ error: "Menu not found" });
 
-  res.json(restaurant.menu);
+  res.json(menu);
 };
 
 // Update menu item
 exports.updateMenuItem = async (req, res) => {
-  const restaurant = await Restaurant.findOne({ "menu._id": req.params.item_id });
-  if (!restaurant) return res.status(404).json({ error: "Menu item not found" });
-
-  const item = restaurant.menu.id(req.params.item_id);
-  Object.assign(item, req.body);
-  await restaurant.save();
-  res.json(item);
+  const updated = await MenuItem.findByIdAndUpdate(req.params.item_id, req.body, { new: true });
+  if (!updated) return res.status(404).json({ error: "Menu Item not found" });
+  res.json(updated);
 };
 
 // Delete menu item
 exports.deleteMenuItem = async (req, res) => {
-  const restaurant = await Restaurant.findOne({ "menu._id": req.params.item_id });
-  if (!restaurant) return res.status(404).json({ error: "Menu item not found" });
+  const deletedMenuItem = await MenuItem.findByIdAndDelete(req.params.item_id);
+  if (!deletedMenuItem) return res.status(404).json({ error: "Menu Item not found" });
 
-  restaurant.menu.id(req.params.item_id).remove();
-  await restaurant.save();
-  res.json({ message: "Menu item deleted" });
+  res.json({ message: "Menu Item deleted successfully" });
 };
