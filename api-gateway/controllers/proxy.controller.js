@@ -60,7 +60,7 @@ const restaurantServiceProxyHandler = async (req, res) => {
   }
 };
 
-const orderServiceProxyProvider = async (req, res) => {
+const orderServiceProxyHandler = async (req, res) => {
   const method = req.method.toLowerCase();
   try{
    console.log(`${process.env.ORDER_SERVICE_URL}${req.originalUrl}`);
@@ -84,5 +84,5 @@ module.exports = {
   userServiceProxyHandler,
   authServiceProxyHandler,
   restaurantServiceProxyHandler,
-  orderServiceProxyProvider
+  orderServiceProxyHandler
 };
