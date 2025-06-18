@@ -41,3 +41,5 @@ router.delete(
   roleMiddleware(["admin", "customer"]),
   orderServiceProxyHandler
 )
+
+module.exports = router;
