@@ -24,6 +24,10 @@ jobs:
             path: services/restaurant-service
             deploy_hook: RENDER_DEPLOY_HOOK_RESTAURANT_SERVICE
 
+          - name: order-service
+            path: services/order-service
+            deploy_hook: RENDER_DEPLOY_HOOK_ORDER_SERVICE
+
           - name: api-gateway
             path: api-gateway
             deploy_hook: RENDER_DEPLOY_HOOK_API_GATEWAY

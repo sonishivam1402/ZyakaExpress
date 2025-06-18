@@ -25,6 +25,13 @@ services:
       - "5002:5002"
     environment:
       MONGO_URI: ${MONGO_URI}
+  
+  order-service:
+    image: sonishivam1402/zyaka-express-order-service
+    ports:
+      - "5003:5003"
+    environment:
+      MONGO_URI: ${MONGO_URI}
 
   api-gateway:
     image: sonishivam1402/zyaka-express-api-gateway
@@ -34,8 +41,10 @@ services:
       USER_SERVICE_URL: http://user-service:5000
       AUTH_SERVICE_URL: http://auth-service:5001
       RESTAURANT_SERVICE_URL: http://restaurant-service:5002
+      ORDER_SERVICE_URL: http://localhost:5003
     depends_on:
       - user-service
       - auth-service
       - restaurant-service
+      - order-service
 
