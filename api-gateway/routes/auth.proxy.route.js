@@ -17,4 +17,9 @@ router.post(
   authServiceProxyHandler
 )
 
+router.post(
+  "/refreshToken",
+  authServiceProxyHandler
+)
+
 module.exports = router;

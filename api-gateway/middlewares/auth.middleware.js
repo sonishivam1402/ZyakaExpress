@@ -11,9 +11,15 @@ module.exports = async (req, res, next) => {
       headers: { Authorization: token }
     });
 
-    req.user = response.data.user; // Pass decoded user info if needed
+    req.user = response.data.user; 
     next();
   } catch (error) {
-    res.status(403).json({ error: 'Invalid or expired token' });
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.error || 'Authorization failed';
+      return res.status(status).json({ error: message });
+    }
+
+    return res.status(500).json({ error: 'Internal auth service error' });
   }
 };
